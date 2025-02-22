@@ -5,82 +5,8 @@ from typing import Dict
 from enum import Enum
 import numpy as np
 from sqlalchemy import create_engine
+from strategy import BollingerStrategy
 
-class Strategy:
-    """
-    Base class for all strategies.
-    """
-    def __init__(self):
-        self.data = None
-        self.signal = 0  # -1, 0, 1 for sell, hold, buy
-
-    def update(self, data):
-        """Update indicators using data up to current time."""
-        self.data = data
-
-    def next(self):
-        """Generate signal for the next period."""
-        pass
-
-class BollingerStrategy(Strategy):
-    """
-    A trading strategy based on Bollinger Bands.
-    
-    Parameters:
-    - window: The moving average window (default: 20)
-    - num_std: Number of standard deviations for the bands (default: 2)
-    """
-    def __init__(self, window=20, num_std=2):
-        super().__init__()
-        self.window = window
-        self.num_std = num_std
-        self.upper_band = None
-        self.lower_band = None
-        self.middle_band = None
-        
-    def update(self, data):
-        """
-        Update the Bollinger Bands indicators.
-        
-        Parameters:
-        - data: pandas DataFrame with 'close_price' price column
-        """
-        self.data = data
-        
-        self.middle_band = self.data['close_price'].rolling(window=self.window).mean()
-        
-        rolling_std = self.data['close_price'].rolling(window=self.window).std()
-        
-        self.upper_band = self.middle_band + (rolling_std * self.num_std)
-        self.lower_band = self.middle_band - (rolling_std * self.num_std)
-        
-    def next(self):
-        """
-        Generate trading signals based on Bollinger Bands.
-        Returns: -1 (sell), 0 (hold), or 1 (buy)
-        """
-        if len(self.data) < self.window:
-            return 0
-        
-        current_price = self.data['close_price'].iloc[-1]
-        
-        if current_price > self.upper_band.iloc[-1]:
-            self.signal = -1  # Sell signal (overbought)
-        elif current_price < self.lower_band.iloc[-1]:
-            self.signal = 1   # Buy signal (oversold)
-        else:
-            self.signal = 0   # Hold
-            
-        return self.signal
-    
-    def get_bands(self):
-        return {
-            'upper': self.upper_band,
-            'middle': self.middle_band,
-            'lower': self.lower_band
-        }
-    
-    
 class Order:
     """
     Order to buy or sell a particular asset.
@@ -352,7 +278,7 @@ query = "SELECT * FROM stock_prices WHERE ticker = 'AMZN'"
 
 data = pd.read_sql(query, engine)
 
-strategy = BollingerStrategy()
+strategy = BollingerStrategy(window = 16, num_std=1)
 backtest = Backtest(data, strategy)
 backtest.run()
 
@@ -363,5 +289,3 @@ for trade in backtest.trades:
 
 
 backtest.plot_equity_curve()
-
-
