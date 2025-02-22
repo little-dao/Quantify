@@ -1,5 +1,7 @@
 import sys
 import os
+import pandas as pd
+from datetime import datetime
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from strategy import *
@@ -62,3 +64,73 @@ expr3 = [
     Operator.RIGHT_PAREN
 ]
 print_expression_result(expr3, data)
+
+window = 20
+num_std = 2.00
+middle_band_var = UserDefinedVariable(day=window, stock_price_state='mvg')
+std_dev_var = UserDefinedVariable(day=window, stock_price_state='std')
+upper_band_expression = UserDefinedExpression([middle_band_var, Operator.ADD,  std_dev_var, Operator.MULTIPLY, num_std])
+lower_band_expression = UserDefinedExpression([middle_band_var, Operator.MINUS, std_dev_var, Operator.MULTIPLY, num_std])
+
+current_close_var = UserDefinedVariable(day=1, stock_price_state='mvg')
+
+sell_strategy = UserDefinedStrategy(
+    user_defined_variable=current_close_var,
+    condition=Condition.GREATER,
+    expression=upper_band_expression,
+    action=Action.EXIT_LONG  # Generates signal=-1
+)
+
+# Buy Strategy (Close < Lower Band)
+buy_strategy = UserDefinedStrategy(
+    user_defined_variable=current_close_var,
+    condition=Condition.LESS,
+    expression=lower_band_expression,
+    action=Action.ENTER_LONG  # Generates signal=1
+)
+
+class CombinedBollingerStrategy(Strategy):
+    def __init__(self, sell_strategy, buy_strategy):
+        super().__init__()
+        self.sell_strategy = sell_strategy
+        self.buy_strategy = buy_strategy
+
+    def update(self, data):
+        self.sell_strategy.update(data)
+        self.buy_strategy.update(data)
+
+    def next(self):
+        sell_signal = self.sell_strategy.next()
+        buy_signal = self.buy_strategy.next()
+        
+        # Prioritize sell over buy (as per original strategy)
+        if sell_signal == -1:
+            return -1
+        elif buy_signal == 1:
+            return 1
+        else:
+            return 0
+        
+
+bollinger = BollingerStrategy(window=20, num_std=2)
+combined = CombinedBollingerStrategy(sell_strategy, buy_strategy)
+
+dict = {
+    "id": [1, 2, 3],
+    "ticker": ["AAPL", "GOOGL", "MSFT"],
+    "date": [datetime(2024, 2, 20), datetime(2024, 2, 21), datetime(2024, 2, 22)],
+    "open_price": [150.0, 2800.5, 310.2],
+    "high_price": [155.0, 2825.0, 315.0],
+    "low_price": [148.5, 2780.0, 308.0],
+    "close_price": [152.0, 2810.0, 312.5],
+    "volume": [50000000, 1200000, 30000000]
+}
+
+data = pd.DataFrame(dict)
+
+bollinger.update(data)
+combined.update(data)
+
+
+# Check if signals match
+assert bollinger.next() == combined.next(), "Signals do not match!"

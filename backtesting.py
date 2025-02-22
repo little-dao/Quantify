@@ -194,6 +194,8 @@ class Backtest:
 
             # Update equity and performance metrics
             self.update_equity(row['close_price'])
+        
+        return self.positions
             
     def get_performance_metrics(self) -> Dict:
         """Calculate and return performance metrics."""
