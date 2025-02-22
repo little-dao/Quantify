@@ -13,7 +13,7 @@ def get_db_connection():
     return pymysql.connect(
         host="localhost",
         user="root",  # Your MySQL username
-        password="password",  # Your MySQL password
+        password="root",  # Your MySQL password
         database="hack_canada",  # Your database name
         charset="utf8mb4",
         cursorclass=pymysql.cursors.DictCursor  # Return results as dictionaries
@@ -32,7 +32,7 @@ def get_financial_data():
         cursor = connection.cursor()
 
         # Build the SQL query dynamically based on provided filters
-        query = "SELECT * FROM stock_prices WHERE 1=1"
+        query = "SELECT * FROM data WHERE 1=1"
         params = []
 
         if ticker:

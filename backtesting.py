@@ -268,13 +268,13 @@ class Backtest:
 db_config = {
     "host": "localhost",
     "user": "root",
-    "password": "password",
+    "password": "root",
     "database": "hack_canada"
 }
 engine = create_engine(f"mysql+pymysql://{db_config['user']}:{db_config['password']}@{db_config['host']}/{db_config['database']}")
 
 
-query = "SELECT * FROM stock_prices WHERE ticker = 'AMZN'"
+query = "SELECT * FROM data WHERE ticker = 'AMZN'"
 
 data = pd.read_sql(query, engine)
 
