@@ -12,45 +12,43 @@ import {
   Legend,
 } from 'chart.js';
 
-// Register Chart.js components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-function Backtesting() {
+function BackTesting() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  // State for user inputs
   const [ticker, setTicker] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
-  // Function to fetch data based on user input
-  const fetchData = () => {
+  const fetchData = async () => {
     setLoading(true);
-    axios.get('http://127.0.0.1:5000/api/financial-data', {
-      params: {
-        ticker,
-        start_date: startDate,
-        end_date: endDate,
-      },
-    })
-      .then(response => {
-        setData(response.data);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-        setLoading(false);
+    setError('');
+    try {
+      const response = await axios.get('http://127.0.0.1:5000/api/financial-data', {
+        params: {
+          ticker,
+          start_date: startDate,
+          end_date: endDate,
+        },
       });
+      setData(response.data);
+    } catch (err) {
+      console.error('Error fetching data:', err);
+      setError('Error fetching data. Please check your API and inputs.');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // Prepare chart data
   const chartData = {
-    labels: data.map(item => new Date(item.date).toLocaleDateString()), // Convert date to readable format
+    labels: data.map(item => new Date(item.date).toLocaleDateString()),
     datasets: [
       {
         label: 'Close Price',
-        data: data.map(item => item.close_price), // Close prices as values
+        data: data.map(item => item.close_price),
         borderColor: 'rgba(75, 192, 192, 1)',
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
         borderWidth: 2,
@@ -62,50 +60,52 @@ function Backtesting() {
   const options = {
     responsive: true,
     plugins: {
-      legend: { position: 'top' },
-      title: { display: true, text: `Stock Prices for ${ticker || 'All Tickers'}` },
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: `Stock Prices for ${ticker || 'All Tickers'}`,
+      },
     },
     scales: {
-      x: { title: { display: true, text: 'Date' } },
-      y: { title: { display: true, text: 'Price (USD)' } },
+      x: {
+        title: {
+          display: true,
+          text: 'Date',
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: 'Price (USD)',
+        },
+      },
     },
   };
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>Stock Price Chart</h1>
-
-      {/* Input fields for user filters */}
-      <div style={{ marginBottom: '20px' }}>
-        <label>
-          Ticker:
-          <input type="text" value={ticker} onChange={(e) => setTicker(e.target.value)} placeholder="Enter ticker (e.g., AAPL)" />
-        </label>
-
-        <label style={{ marginLeft: '20px' }}>
-          Start Date:
-          <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
-        </label>
-
-        <label style={{ marginLeft: '20px' }}>
-          End Date:
-          <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
-        </label>
-
-        <button onClick={fetchData} style={{ marginLeft: '20px' }}>Fetch Data</button>
+    <div>
+      <h2>Backtesting</h2>
+      <div>
+        <label>Ticker:</label>
+        <input type="text" value={ticker} onChange={e => setTicker(e.target.value)} />
       </div>
-
-      {/* Loading indicator */}
-      {loading && <div>Loading...</div>}
-
-      {/* Chart */}
-      {!loading && data.length > 0 ? (
-        <Line data={chartData} options={options} />
-      ) : (
-        !loading && <div>No data available</div>
-      )}
+      <div>
+        <label>Start Date:</label>
+        <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} />
+      </div>
+      <div>
+        <label>End Date:</label>
+        <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} />
+      </div>
+      <button onClick={fetchData} disabled={loading}>
+        {loading ? 'Loading...' : 'Fetch Data'}
+      </button>
+      {error && <div className="error">{error}</div>}
+      {data.length > 0 && <Line data={chartData} options={options} />}
     </div>
   );
 }
 
-export default Backtesting;
+export default BackTesting;
