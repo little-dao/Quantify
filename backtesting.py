@@ -171,8 +171,7 @@ class Backtest:
 
     def apply_slippage(self, price: float, action: str) -> float:
         """Apply slippage to execution price."""
-        slippage = price * self.config.slippage_rate
-        return price * (1 + slippage) if action == 'buy' else price * (1 - slippage)
+        return price * (1 + self.config.slippage_rate) if action == 'buy' else price * (1 - self.config.slippage_rate)
 
     def calculate_commission(self, price: float, quantity: int) -> float:
         """Calculate trading commission."""
