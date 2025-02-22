@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -10,26 +11,29 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { Line } from 'react-chartjs-2';
 
-// Register the required components for Chart.js
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
+// Register Chart.js components
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 function App() {
   const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    // Fetch data from Flask API
-    axios.get('http://127.0.0.1:5000/api/financial-data')
+  // State for user inputs
+  const [ticker, setTicker] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+
+  // Function to fetch data based on user input
+  const fetchData = () => {
+    setLoading(true);
+    axios.get('http://127.0.0.1:5000/api/financial-data', {
+      params: {
+        ticker,
+        start_date: startDate,
+        end_date: endDate,
+      },
+    })
       .then(response => {
         setData(response.data);
         setLoading(false);
@@ -38,11 +42,7 @@ function App() {
         console.error('Error fetching data:', error);
         setLoading(false);
       });
-  }, []);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  };
 
   // Prepare chart data
   const chartData = {
@@ -67,7 +67,7 @@ function App() {
       },
       title: {
         display: true,
-        text: `Stock Prices for ${data[0]?.ticker}`, // Display the ticker symbol dynamically
+        text: `Stock Prices for ${ticker || 'All Tickers'}`, // Display selected ticker or default text
       },
     },
     scales: {
@@ -89,7 +89,49 @@ function App() {
   return (
     <div style={{ padding: '20px' }}>
       <h1>Stock Price Chart</h1>
-      <Line data={chartData} options={options} />
+
+      {/* Input fields for user filters */}
+      <div style={{ marginBottom: '20px' }}>
+        <label>
+          Ticker:
+          <input
+            type="text"
+            value={ticker}
+            onChange={(e) => setTicker(e.target.value)}
+            placeholder="Enter ticker (e.g., AAPL)"
+          />
+        </label>
+
+        <label style={{ marginLeft: '20px' }}>
+          Start Date:
+          <input
+            type="date"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+          />
+        </label>
+
+        <label style={{ marginLeft: '20px' }}>
+          End Date:
+          <input
+            type="date"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+          />
+        </label>
+
+        <button onClick={fetchData} style={{ marginLeft: '20px' }}>Fetch Data</button>
+      </div>
+
+      {/* Loading indicator */}
+      {loading && <div>Loading...</div>}
+
+      {/* Chart */}
+      {!loading && data.length > 0 ? (
+        <Line data={chartData} options={options} />
+      ) : (
+        !loading && <div>No data available</div>
+      )}
     </div>
   );
 }
