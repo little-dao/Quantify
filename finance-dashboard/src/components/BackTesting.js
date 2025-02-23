@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { Line } from 'react-chartjs-2';
 import {
@@ -62,7 +62,7 @@ function BackTesting() {
     labels: stockData.map(item => new Date(item.date).toLocaleDateString()),
     datasets: [
       {
-        label: 'Buy',
+        label: 'Close Price',
         data: stockData.map(item => item.close_price),
         borderColor: stockData.map((item) => {
           if (entryDates.includes(item.date)) {
@@ -70,7 +70,7 @@ function BackTesting() {
           } else if (exitDates.includes(item.date)) {
             return 'rgba(54, 162, 235, 1)'; // Blue for exit dates
           } else {
-            return 'rgba(0, 0, 0, 1)'; // Default teal color
+            return 'rgba(75, 192, 192, 1)'; // Default teal color
           }
         }),
         backgroundColor: stockData.map((item) => {
@@ -79,7 +79,7 @@ function BackTesting() {
           } else if (exitDates.includes(item.date)) {
             return 'rgba(54, 162, 235, 0.2)'; // Light blue for exit dates
           } else {
-            return 'rgba(255, 99, 132, 1)'; // Default light teal color
+            return 'rgba(75, 192, 192, 0.2)'; // Default light teal color
           }
         }),
         pointBorderWidth: stockData.map((item) =>
@@ -126,11 +126,7 @@ function BackTesting() {
             size: 10,           // Increase font size
             weight: 'normal',   // Set font weight to normal
           },
-          color: (context) => {
-            console.log("test", context)
-            return ""
-            // return text === 'Buy' ? 'red' : 'black'
-          },  // Change font color of legend labels
+          color: 'rgba(0, 0, 0, 0.6)',  // Change font color of legend labels
           padding: 20,                // Add padding around each legend item
           boxWidth: 20,               // Set the width of the colored box next to the legend label
           boxHeight: 20,              // Set the height of the colored box next to the legend label
