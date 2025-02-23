@@ -42,7 +42,7 @@ Follow these steps to set up and run the application from scratch.
 
     - Start your MySQL server.
     - Create a database named `hack_canada`.
-    - Update the `db_config` dictionary in `app.py` with your MySQL credentials.
+    - Update the `db_config` and credentials in `get_db_connection()` dictionary in `app.py` with your MySQL credentials.
 
 5. **Run the backend server:**
 
@@ -137,3 +137,15 @@ or
 ```sh
 npm start
 ```
+
+## **Login**
+
+Due to time constraints, our current login system does **not** support user registration and authentication. Instead, we provide a default login for all users:
+
+**Login Credentials:**
+- **Username:** `user`
+- **Password:** `password`
+
+Simply enter these credentials on the login screen to access the system.
+
+⚠️ *Note:* This is a temporary solution. In future versions, we plan to implement proper authentication and user management.
