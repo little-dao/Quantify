@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import './BackTesting.css';
 import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -11,6 +12,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import { useTable } from 'react-table';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -86,7 +88,7 @@ function BackTesting() {
           entryDates.includes(item.date) || exitDates.includes(item.date) ? 3 : 1 // Thicker border for highlighted points
         ),
         tension: 0.4,
-      },   
+      },
       {
         label: 'Sell (Blue)',
         data: stockData.map(item => item.close_price),
@@ -112,7 +114,7 @@ function BackTesting() {
           entryDates.includes(item.date) || exitDates.includes(item.date) ? 3 : 1 // Thicker border for highlighted points
         ),
         tension: 0.4,
-      }, 
+      },
     ],
   };
 
@@ -162,6 +164,45 @@ function BackTesting() {
     },
   };
 
+  const columns = React.useMemo(
+    () => [
+      {
+        Header: 'Symbol',
+        accessor: 'symbol',
+      },
+      {
+        Header: 'Entry Date',
+        accessor: 'entry_date',
+      },
+      {
+        Header: 'Entry Price',
+        accessor: 'entry_price',
+      },
+      {
+        Header: 'Exit Date',
+        accessor: 'exit_date',
+      },
+      {
+        Header: 'Exit Price',
+        accessor: 'exit_price',
+      },
+      {
+        Header: 'PnL',
+        accessor: 'pnl',
+      },
+    ],
+    []
+  );
+
+  const data = React.useMemo(() => tradesData, [tradesData]);
+
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+  } = useTable({ columns, data });
 
   return (
     <div>
@@ -183,6 +224,37 @@ function BackTesting() {
       </button>
       {error && <div className="error">{error}</div>}
       {stockData.length > 0 && <Line data={chartData} options={options} />}
+      {tradesData.length > 0 && (
+      <div className="table-container">
+        <table {...getTableProps()}>
+          <thead>
+            {headerGroups.map(headerGroup => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map(column => (
+                  <th {...column.getHeaderProps()}>
+                    {column.render('Header')}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+{rows.map(row => {
+  prepareRow(row);
+  return (
+    <tr {...row.getRowProps()}>
+      {row.cells.map(cell => (
+        <td {...cell.getCellProps()} style={{ border: '1px solid black', padding: '5px' }}>
+          {cell.render('Cell')}
+        </td>
+      ))}
+    </tr>
+  );
+})}
+          </tbody>
+        </table>
+      </div>
+            )}
     </div>
   );
 }

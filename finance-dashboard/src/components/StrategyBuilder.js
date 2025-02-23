@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import './StrategyBuilder.css';
 
 function StrategyBuilder() {
   const [blocks, setBlocks] = useState([]);
@@ -115,21 +116,16 @@ function StrategyBuilder() {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div>
+      <div className="container">
         {/* Enter Long */}
         <h3>Enter Long</h3>
-        <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
+        <div className="droppable-container">
           <Droppable droppableId="enterLongLeft">
             {(provided) => (
               <div
                 ref={provided.innerRef}
                 {...provided.droppableProps}
-                style={{
-                  minHeight: '50px',
-                  width: '150px',
-                  backgroundColor: '#e0e0e0',
-                  padding: '10px',
-                }}
+                className="droppable"
               >
                 <strong>Left Operand</strong>
                 <div>{enterLongOperands.left}</div>
@@ -141,7 +137,7 @@ function StrategyBuilder() {
           <select
             value={enterLongCondition}
             onChange={(e) => setEnterLongCondition(e.target.value)}
-            style={{ marginLeft: '10px' }}
+            className="select"
           >
             {conditions.map(cond => (
               <option key={cond} value={cond}>{cond}</option>
@@ -153,12 +149,7 @@ function StrategyBuilder() {
               <div
                 ref={provided.innerRef}
                 {...provided.droppableProps}
-                style={{
-                  minHeight: '50px',
-                  width: '150px',
-                  backgroundColor: '#e0e0e0',
-                  padding: '10px',
-                }}
+                className="droppable"
               >
                 <strong>Right Operand</strong>
                 <div>{enterLongOperands.right}</div>
@@ -170,18 +161,13 @@ function StrategyBuilder() {
 
         {/* Exit Long */}
         <h3>Exit Long</h3>
-        <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
+        <div className="droppable-container">
           <Droppable droppableId="exitLongLeft">
             {(provided) => (
               <div
                 ref={provided.innerRef}
                 {...provided.droppableProps}
-                style={{
-                  minHeight: '50px',
-                  width: '150px',
-                  backgroundColor: '#e0e0e0',
-                  padding: '10px',
-                }}
+                className="droppable"
               >
                 <strong>Left Operand</strong>
                 <div>{exitLongOperands.left}</div>
@@ -193,7 +179,7 @@ function StrategyBuilder() {
           <select
             value={exitLongCondition}
             onChange={(e) => setExitLongCondition(e.target.value)}
-            style={{ marginLeft: '10px' }}
+            className="select"
           >
             {conditions.map(cond => (
               <option key={cond} value={cond}>{cond}</option>
@@ -205,12 +191,7 @@ function StrategyBuilder() {
               <div
                 ref={provided.innerRef}
                 {...provided.droppableProps}
-                style={{
-                  minHeight: '50px',
-                  width: '150px',
-                  backgroundColor: '#e0e0e0',
-                  padding: '10px',
-                }}
+                className="droppable"
               >
                 <strong>Right Operand</strong>
                 <div>{exitLongOperands.right}</div>
@@ -235,14 +216,7 @@ function StrategyBuilder() {
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
-                      style={{
-                        userSelect: 'none',
-                        padding: 16,
-                        marginRight: 8,
-                        backgroundColor: '#456C86',
-                        color: '#fff',
-                        ...provided.draggableProps.style,
-                      }}
+                      className="draggable"
                     >
                       {block.label}
                     </div>
@@ -273,16 +247,7 @@ function StrategyBuilder() {
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
-                      style={{
-                        userSelect: 'none',
-                        padding: 16,
-                        marginBottom: 8,
-                        backgroundColor: '#263B4A',
-                        color: '#fff',
-                        display: 'flex',
-                        alignItems: 'center',
-                        ...provided.draggableProps.style,
-                      }}
+                      className="strategy-block"
                     >
                       {block.label}
                       {block.label !== "Last Price" && (
@@ -292,20 +257,17 @@ function StrategyBuilder() {
                             value={block.days || ''}
                             onChange={(e) => handleDayChange(block.uniqueId, e.target.value)}
                             placeholder="Days"
-                            style={{ marginLeft: "10px", width: "60px" }}
                           />
                           <input
                             type="text"
                             value={block.operation}
                             onChange={(e) => handleOperationChange(block.uniqueId, e.target.value)}
                             placeholder="Operation"
-                            style={{ marginLeft: "10px", width: "50px" }}
                           />
                           {index !== blocks.length - 1 && (
                             <select
                               value={block.operator || "+"}
                               onChange={(e) => handleOperatorChange(block.uniqueId, e.target.value)}
-                              style={{ marginLeft: "10px" }}
                             >
                               {operators.map((op) => (
                                 <option key={op} value={op}>{op}</option>
@@ -330,13 +292,8 @@ function StrategyBuilder() {
               <div
                 ref={provided.innerRef}
                 {...provided.droppableProps}
-                style={{
-                  minHeight: '50px',
-                  width: '150px',
-                  backgroundColor: '#e0e0e0',
-                  padding: '10px',
-                  marginBottom: '20px'
-                }}
+                className="droppable"
+                style={{ marginBottom: '20px' }}
               >
                 <Draggable key={expressionBlock.uniqueId} draggableId={expressionBlock.uniqueId} index={0}>
                   {(provided) => (
@@ -344,13 +301,7 @@ function StrategyBuilder() {
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
-                      style={{
-                        userSelect: 'none',
-                        padding: '16px',
-                        backgroundColor: '#456C86',
-                        color: 'white',
-                        ...provided.draggableProps.style
-                      }}
+                      className="draggable"
                     >
                       {expressionBlock.label}
                       <button onClick={() => setExpressionBlock(null)}>Delete</button>
@@ -371,7 +322,7 @@ function StrategyBuilder() {
 
         {/* Display Generated Expression */}
         {expression && (
-          <div style={{ marginTop: "20px" }}>
+          <div className="generated-expression">
             <h3>Generated Expression:</h3>
             <pre>{expression}</pre>
           </div>
