@@ -90,7 +90,7 @@ function BackTesting() {
         tension: 0.4,
       },
       {
-        label: 'Sell (Blue)',
+        label: 'Sell (Green)',
         data: stockData.map(item => item.close_price),
         borderColor: stockData.map((item) => {
           if (entryDates.includes(item.date)) {
