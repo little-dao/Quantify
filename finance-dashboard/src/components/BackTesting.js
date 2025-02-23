@@ -62,7 +62,7 @@ function BackTesting() {
     labels: stockData.map(item => new Date(item.date).toLocaleDateString()),
     datasets: [
       {
-        label: 'Close Price',
+        label: 'Buy (Red)',
         data: stockData.map(item => item.close_price),
         borderColor: stockData.map((item) => {
           if (entryDates.includes(item.date)) {
@@ -88,7 +88,7 @@ function BackTesting() {
         tension: 0.4,
       },   
       {
-        label: 'Sell',
+        label: 'Sell (Blue)',
         data: stockData.map(item => item.close_price),
         borderColor: stockData.map((item) => {
           if (entryDates.includes(item.date)) {
@@ -136,6 +136,14 @@ function BackTesting() {
       title: {
         display: true,
         text: `Stock Prices for ${ticker || 'All Tickers'}`,
+        color:
+          entryDates.length > exitDates.length
+            ? 'rgba(255, 99, 132, 1)' // Red if more Buy points
+            : 'rgba(54, 162, 235, 1)', // Blue if more Sell points
+        font: {
+          size: 16,
+          weight: 'bold',
+        },
       },
     },
     scales: {
@@ -153,6 +161,7 @@ function BackTesting() {
       },
     },
   };
+
 
   return (
     <div>

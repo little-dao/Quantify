@@ -43,8 +43,8 @@ function StrategyBuilder() {
         ...draggedBlock,
         uniqueId: Date.now().toString(),
         days: draggedBlock.label === 'Last Price' ? '' : draggedBlock.days || '',
-        operator: '+',
-        operation: ''
+        operator: draggedBlock.operator || '+',
+        operation: draggedBlock.operation || ''
       };
       setBlocks([...blocks, newBlock]);
     }
@@ -71,9 +71,15 @@ function StrategyBuilder() {
   const handleBuildExpression = () => {
     const enterLongExpr = `Enter Long when ${enterLongOperands.left} ${enterLongCondition} ${enterLongOperands.right}`;
     const exitLongExpr = `Exit Long when ${exitLongOperands.left} ${exitLongCondition} ${exitLongOperands.right}`;
-    const strategyExpr = blocks.map(block => `${block.label}(${block.days})${block.operation}`).join(' + ');
-    const fullExpression = `${enterLongExpr}\n${exitLongExpr}\nStrategy Expression: ${strategyExpr}`;
-    setExpression(fullExpression);
+    const strategyExpr = blocks.map((block, index) => {
+  const days = block.days ? `(${block.days})` : '';
+  const operation = block.operation ? block.operation : '';
+  const operator = index < blocks.length - 1 ? block.operator || '+' : ''; // Use the selected operator
+  return `${block.label}${days}${operation} ${operator}`;
+}).join('');
+
+
+  const fullExpression = `${enterLongExpr}\n${exitLongExpr}\nStrategy Expression: ${strategyExpr}`;
 
     // Create an expression block for reuse
     const newExpressionBlock = {
@@ -108,8 +114,6 @@ function StrategyBuilder() {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div>
-        <h2>Strategy Builder</h2>
-
         {/* Enter Long */}
         <h3>Enter Long</h3>
         <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
