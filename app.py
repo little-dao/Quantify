@@ -16,7 +16,7 @@ def get_db_connection():
     return pymysql.connect(
         host="localhost",
         user="root",  # Your MySQL username
-        password="password",  # Your MySQL password
+        password="root",  # Your MySQL password
         database="hack_canada",  # Your database name
         charset="utf8mb4",
         cursorclass=pymysql.cursors.DictCursor  # Return results as dictionaries
@@ -67,7 +67,7 @@ def get_financial_data():
 db_config = {
     "host": "localhost",
     "user": "root",
-    "password": "password",
+    "password": "root",
     "database": "hack_canada"
 }
 
@@ -102,6 +102,28 @@ def get_trades():
     except Exception as e:
         print(e)
         return jsonify({"error": str(e)}), 500  # Handle errors gracefully
+
+
+@app.route('/api/submit-expression', methods=['POST'])
+def submit_expression():
+    data = request.get_json()
+    expression = data.get('expression')
+
+    # Process the expression as needed
+    print(f'Received expression: {expression}')
+
+    # Example processing: split the expression into lines
+    lines = expression.split('\n')
+    enter_long_expr = lines[0]
+    exit_long_expr = lines[1]
+    strategy_expr = lines[2] if len(lines) > 2 else ''
+
+    # Further processing can be done here
+    # For example, you can save the expressions to a database or perform some calculations
+
+    return jsonify(
+        {'message': 'Expression received successfully', 'enter_long': enter_long_expr, 'exit_long': exit_long_expr,
+         'strategy': strategy_expr}), 200
 
 
 if __name__ == '__main__':

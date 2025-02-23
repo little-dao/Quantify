@@ -38,7 +38,7 @@ def create_table(cursor):
 # Insert data into MySQL
 def insert_data(cursor, ticker, data):
     insert_query = """
-    INSERT INTO data (ticker, date, open_price, high_price, low_price, close_price, volume)
+    INSERT INTO stock_prices (ticker, date, open_price, high_price, low_price, close_price, volume)
     VALUES (%s, %s, %s, %s, %s, %s, %s)
     """
     for _, row in data.iterrows():

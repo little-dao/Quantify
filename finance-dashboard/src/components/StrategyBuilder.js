@@ -89,7 +89,7 @@ function StrategyBuilder() {
     const exitLongExpr = `Exit Long when ${exitLongOperands.left} ${exitLongCondition} ${exitLongOperands.right}`;
     const fullExpression = `${enterLongExpr}\n${exitLongExpr}`;
 
-    fetch('http://localhost:5000/api/submit-expression', {
+    fetch('http://localhost:8000/api/submit-expression', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
