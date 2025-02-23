@@ -5,10 +5,7 @@ function StrategyBuilder() {
   const [blocks, setBlocks] = useState([]);
   const [enterLongOperands, setEnterLongOperands] = useState({ left: '', right: '' });
   const [exitLongOperands, setExitLongOperands] = useState({ left: '', right: '' });
-  const [enterLongCondition, setEnterLongCondition] = useState('>');
-  const [exitLongCondition, setExitLongCondition] = useState('<');
   const [expression, setExpression] = useState('');
-  const [expressionBlock, setExpressionBlock] = useState(null);
 
   const availableBlocks = [
     { id: '1', label: 'Moving Average' },
@@ -19,16 +16,11 @@ function StrategyBuilder() {
   ];
 
   const operators = ['+', '-', '*', '/'];
-  const conditions = ['>', '<', '>=', '<=', '='];
 
   const onDragEnd = (result) => {
     if (!result.destination) return;
 
-    const draggedBlock = availableBlocks.find(block => block.id === result.draggableId) ||
-      blocks.find(block => block.uniqueId === result.draggableId) ||
-      (expressionBlock && expressionBlock.uniqueId === result.draggableId ? expressionBlock : null);
-
-    if (!draggedBlock) return;
+    const draggedBlock = availableBlocks.find(block => block.id === result.draggableId);
 
     if (result.destination.droppableId === 'enterLongLeft') {
       setEnterLongOperands({ ...enterLongOperands, left: draggedBlock.label });
@@ -39,13 +31,7 @@ function StrategyBuilder() {
     } else if (result.destination.droppableId === 'exitLongRight') {
       setExitLongOperands({ ...exitLongOperands, right: draggedBlock.label });
     } else if (result.destination.droppableId === 'strategy') {
-      const newBlock = {
-        ...draggedBlock,
-        uniqueId: Date.now().toString(),
-        days: draggedBlock.label === 'Last Price' ? '' : draggedBlock.days || '',
-        operator: '+',
-        operation: ''
-      };
+      const newBlock = { ...draggedBlock, uniqueId: Date.now().toString(), days: '' };
       setBlocks([...blocks, newBlock]);
     }
   };
@@ -56,53 +42,11 @@ function StrategyBuilder() {
     ));
   };
 
-  const handleOperatorChange = (uniqueId, operator) => {
-    setBlocks(blocks.map(block =>
-      block.uniqueId === uniqueId ? { ...block, operator } : block
-    ));
-  };
-
-  const handleOperationChange = (uniqueId, operation) => {
-    setBlocks(blocks.map(block =>
-      block.uniqueId === uniqueId ? { ...block, operation } : block
-    ));
-  };
-
   const handleBuildExpression = () => {
-    const enterLongExpr = `Enter Long when ${enterLongOperands.left} ${enterLongCondition} ${enterLongOperands.right}`;
-    const exitLongExpr = `Exit Long when ${exitLongOperands.left} ${exitLongCondition} ${exitLongOperands.right}`;
-    const strategyExpr = blocks.map(block => `${block.label}(${block.days})${block.operation}`).join(' + ');
-    const fullExpression = `${enterLongExpr}\n${exitLongExpr}\nStrategy Expression: ${strategyExpr}`;
-    setExpression(fullExpression);
-
-    // Create an expression block for reuse
-    const newExpressionBlock = {
-      uniqueId: Date.now().toString(),
-      label: strategyExpr,
-      days: '',
-    };
-    setExpressionBlock(newExpressionBlock);
-  };
-
-  const handleSubmit = () => {
-    const enterLongExpr = `Enter Long when ${enterLongOperands.left} ${enterLongCondition} ${enterLongOperands.right}`;
-    const exitLongExpr = `Exit Long when ${exitLongOperands.left} ${exitLongCondition} ${exitLongOperands.right}`;
-    const fullExpression = `${enterLongExpr}\n${exitLongExpr}`;
-
-    fetch('http://localhost:5000/api/submit-expression', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ expression: fullExpression }),
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Success:', data);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
+    const enterLongExpr = `Enter Long when ${enterLongOperands.left} > ${enterLongOperands.right}`;
+    const exitLongExpr = `Exit Long when ${exitLongOperands.left} < ${exitLongOperands.right}`;
+    const strategyExpr = blocks.map(block => `${block.label}(${block.days})`).join(' + ');
+    setExpression(`${enterLongExpr}\n${exitLongExpr}\nStrategy Expression: ${strategyExpr}`);
   };
 
   return (
@@ -110,7 +54,7 @@ function StrategyBuilder() {
       <div>
         <h2>Strategy Builder</h2>
 
-        {/* Enter Long */}
+        {/* Enter Long Operands */}
         <h3>Enter Long</h3>
         <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
           <Droppable droppableId="enterLongLeft">
@@ -132,16 +76,6 @@ function StrategyBuilder() {
             )}
           </Droppable>
 
-          <select
-            value={enterLongCondition}
-            onChange={(e) => setEnterLongCondition(e.target.value)}
-            style={{ marginLeft: '10px' }}
-          >
-            {conditions.map(cond => (
-              <option key={cond} value={cond}>{cond}</option>
-            ))}
-          </select>
-
           <Droppable droppableId="enterLongRight">
             {(provided) => (
               <div
@@ -162,7 +96,7 @@ function StrategyBuilder() {
           </Droppable>
         </div>
 
-        {/* Exit Long */}
+        {/* Exit Long Operands */}
         <h3>Exit Long</h3>
         <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
           <Droppable droppableId="exitLongLeft">
@@ -183,16 +117,6 @@ function StrategyBuilder() {
               </div>
             )}
           </Droppable>
-
-          <select
-            value={exitLongCondition}
-            onChange={(e) => setExitLongCondition(e.target.value)}
-            style={{ marginLeft: '10px' }}
-          >
-            {conditions.map(cond => (
-              <option key={cond} value={cond}>{cond}</option>
-            ))}
-          </select>
 
           <Droppable droppableId="exitLongRight">
             {(provided) => (
@@ -280,33 +204,13 @@ function StrategyBuilder() {
                     >
                       {block.label}
                       {block.label !== "Last Price" && (
-                        <>
-                          <input
-                            type="number"
-                            value={block.days || ''}
-                            onChange={(e) => handleDayChange(block.uniqueId, e.target.value)}
-                            placeholder="Days"
-                            style={{ marginLeft: "10px", width: "60px" }}
-                          />
-                          <input
-                            type="text"
-                            value={block.operation}
-                            onChange={(e) => handleOperationChange(block.uniqueId, e.target.value)}
-                            placeholder="Operation"
-                            style={{ marginLeft: "10px", width: "50px" }}
-                          />
-                          {index !== blocks.length - 1 && (
-                            <select
-                              value={block.operator || "+"}
-                              onChange={(e) => handleOperatorChange(block.uniqueId, e.target.value)}
-                              style={{ marginLeft: "10px" }}
-                            >
-                              {operators.map((op) => (
-                                <option key={op} value={op}>{op}</option>
-                              ))}
-                            </select>
-                          )}
-                        </>
+                        <input
+                          type="number"
+                          value={block.days || ''}
+                          onChange={(e) => handleDayChange(block.uniqueId, e.target.value)}
+                          placeholder="Days"
+                          style={{ marginLeft: 10 }}
+                        />
                       )}
                     </div>
                   )}
@@ -317,51 +221,8 @@ function StrategyBuilder() {
           )}
         </Droppable>
 
-        {/* Expression Block */}
-        {expressionBlock && (
-          <Droppable droppableId="expressionBlock">
-            {(provided) => (
-              <div
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-                style={{
-                  minHeight: '50px',
-                  width: '150px',
-                  backgroundColor: '#e0e0e0',
-                  padding: '10px',
-                  marginBottom: '20px'
-                }}
-              >
-                <Draggable key={expressionBlock.uniqueId} draggableId={expressionBlock.uniqueId} index={0}>
-                  {(provided) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      style={{
-                        userSelect: 'none',
-                        padding: '16px',
-                        backgroundColor: '#456C86',
-                        color: 'white',
-                        ...provided.draggableProps.style
-                      }}
-                    >
-                      {expressionBlock.label}
-                      <button onClick={() => setExpressionBlock(null)}>Delete</button>
-                    </div>
-                  )}
-                </Draggable>
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        )}
-
         {/* Build Expression */}
         <button onClick={handleBuildExpression}>Build Expression</button>
-
-        {/* Submit Expression */}
-        <button onClick={handleSubmit}>Submit Expression</button>
 
         {/* Display Generated Expression */}
         {expression && (

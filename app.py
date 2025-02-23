@@ -32,7 +32,7 @@ def get_financial_data():
         cursor = connection.cursor()
 
         # Build the SQL query dynamically based on provided filters
-        query = "SELECT * FROM data WHERE 1=1"
+        query = "SELECT * FROM stock_prices WHERE 1=1"
         params = []
 
         if ticker:
@@ -100,6 +100,16 @@ def get_trades():
     except Exception as e:
         return jsonify({"error": str(e)}), 500  # Handle errors gracefully
 
+from flask import Flask, request, jsonify
+
+
+@app.route('/api/submit-expression', methods=['POST'])
+def submit_expression():
+    data = request.get_json()
+    expression = data.get('expression')
+    # Process the expression as needed
+    print(f'Received expression: {expression}')
+    return jsonify({'message': 'Expression received successfully'}), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
