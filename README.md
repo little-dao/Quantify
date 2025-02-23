@@ -43,6 +43,7 @@ Follow these steps to set up and run the application from scratch.
     - Start your MySQL server.
     - Create a database named `hack_canada`.
     - Update the `db_config` dictionary and the credentials in the `get_db_connection()` function in app.py with your MySQL credentials.
+    - Run `python data/data.py` to fetch stock data of some of the most popular stocks.
 
 5. **Run the backend server:**
 
