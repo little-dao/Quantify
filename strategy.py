@@ -255,8 +255,8 @@ class UserDefinedStrategy(Strategy):
         self.action = action
 
     def update(self, data):
-        self.user_defined_variable.evaluate(data)
-        self.expression_value = self.expression.evaluate(data)
+        self.operand = self.user_defined_variable.evaluate(data)[0]
+        self.expression_value = self.expression.evaluate(data)[0]
 
     def next(self):
         if self.condition == Condition.GREATER:

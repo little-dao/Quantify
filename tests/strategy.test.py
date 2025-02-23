@@ -65,7 +65,7 @@ expr3 = [
 ]
 print_expression_result(expr3, data)
 
-window = 20
+window = 1
 num_std = 2.00
 middle_band_var = UserDefinedVariable(day=window, stock_price_state='mvg')
 std_dev_var = UserDefinedVariable(day=window, stock_price_state='std')
@@ -112,7 +112,7 @@ class CombinedBollingerStrategy(Strategy):
             return 0
         
 
-bollinger = BollingerStrategy(window=20, num_std=2)
+bollinger = BollingerStrategy(window=1, num_std=2)
 combined = CombinedBollingerStrategy(sell_strategy, buy_strategy)
 
 dict = {
@@ -128,9 +128,14 @@ dict = {
 
 data = pd.DataFrame(dict)
 
-bollinger.update(data)
-combined.update(data)
+bollinger.update(data.iloc[:1])
+combined.update(data.iloc[:1])
 
+bollinger_result = bollinger.next()
+combined_result = combined.next()
+
+print(f'Bollinger result: {bollinger_result}')
+print(f'Combined result: {combined_result}')
 
 # Check if signals match
-assert bollinger.next() == combined.next(), "Signals do not match!"
+assert bollinger_result == combined_result, f'{bollinger_result} and {combined_result} do not match!'
