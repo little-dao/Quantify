@@ -76,3 +76,64 @@ Follow these steps to set up and run the application from scratch.
 2. **Open your web browser and navigate to `http://localhost:3000`.**
 
 You should now be able to use the Quantify web-app to backtest trading strategies and visualize stock data.
+
+
+### **Handling Dependency Conflicts**
+
+If you encounter dependency resolution errors, such as:
+
+```
+npm ERR! ERESOLVE unable to resolve dependency tree
+```
+
+try the following solutions:
+
+#### **1. Install Dependencies with `--legacy-peer-deps` (Recommended)**
+If `npm install` fails due to peer dependency conflicts, run:
+```sh
+npm install --legacy-peer-deps
+```
+This allows dependencies to install even if there are mismatched peer versions.
+
+#### **2. Force Install Dependencies**
+If `--legacy-peer-deps` does not work, try:
+```sh
+npm install --force
+```
+⚠️ *Warning:* This may override dependency conflicts but could lead to instability.
+
+#### **3. Downgrade React (If Using `react-table` or Other Incompatible Packages)**
+Some packages, like `react-table@7.8.0`, do not support React 19. If you face issues, downgrade React to version 18:
+
+```sh
+npm uninstall react react-dom
+npm install react@18 react-dom@18
+```
+
+#### **4. Manually Install Missing Dependencies**
+If you see an error like:
+```sh
+Module not found: Error: Can't resolve '@fortawesome/fontawesome-svg-core'
+```
+Manually install missing dependencies:
+```sh
+npm install @fortawesome/fontawesome-svg-core @fortawesome/free-solid-svg-icons @fortawesome/react-fontawesome
+```
+
+#### **5. Clear Cache and Reinstall Dependencies**
+If dependency conflicts persist, reset your environment:
+
+```sh
+rm -rf node_modules package-lock.json
+npm cache clean --force
+npm install
+```
+After reinstalling, restart your development server:
+
+```sh
+npm run dev
+```
+or
+```sh
+npm start
+```
