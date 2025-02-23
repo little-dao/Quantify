@@ -15,26 +15,38 @@ import {
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 function BackTesting() {
-  const [data, setData] = useState([]);
+  const [stockData, setStockData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const [ticker, setTicker] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [tradesData, setTrades] = useState([]);
 
   const fetchData = async () => {
     setLoading(true);
     setError('');
     try {
-      const response = await axios.get('http://127.0.0.1:5000/api/financial-data', {
-        params: {
-          ticker,
-          start_date: startDate,
-          end_date: endDate,
-        },
-      });
-      setData(response.data);
+      const [financialDataResponse, tradesResponse] = await Promise.all([
+        axios.get('http://127.0.0.1:8000/api/financial-data', {
+          params: {
+            ticker,
+            start_date: startDate,
+            end_date: endDate,
+          },
+        }),
+        axios.get('http://127.0.0.1:8000/api/trades', {
+          params: {
+            ticker,
+            start_date: startDate,
+            end_date: endDate,
+          },
+        })
+      ]);
+      setStockData(financialDataResponse.data);
+      setTrades(tradesResponse.data);
+      console.log('Data fetched:', financialDataResponse.data, tradesResponse.data);
     } catch (err) {
       console.error('Error fetching data:', err);
       setError('Error fetching data. Please check your API and inputs.');
@@ -43,17 +55,64 @@ function BackTesting() {
     }
   };
 
+  const entryDates = tradesData.map(trade => trade.entry_date);
+  const exitDates = tradesData.map(trade => trade.exit_date);
+
   const chartData = {
-    labels: data.map(item => new Date(item.date).toLocaleDateString()),
+    labels: stockData.map(item => new Date(item.date).toLocaleDateString()),
     datasets: [
       {
         label: 'Close Price',
-        data: data.map(item => item.close_price),
-        borderColor: 'rgba(75, 192, 192, 1)',
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        borderWidth: 2,
+        data: stockData.map(item => item.close_price),
+        borderColor: stockData.map((item) => {
+          if (entryDates.includes(item.date)) {
+            return 'rgba(255, 99, 132, 1)'; // Red for entry dates
+          } else if (exitDates.includes(item.date)) {
+            return 'rgba(54, 162, 235, 1)'; // Blue for exit dates
+          } else {
+            return 'rgba(75, 192, 192, 1)'; // Default teal color
+          }
+        }),
+        backgroundColor: stockData.map((item) => {
+          if (entryDates.includes(item.date)) {
+            return 'rgba(255, 99, 132, 0.2)'; // Light red for entry dates
+          } else if (exitDates.includes(item.date)) {
+            return 'rgba(54, 162, 235, 0.2)'; // Light blue for exit dates
+          } else {
+            return 'rgba(75, 192, 192, 0.2)'; // Default light teal color
+          }
+        }),
+        pointBorderWidth: stockData.map((item) =>
+          entryDates.includes(item.date) || exitDates.includes(item.date) ? 3 : 1 // Thicker border for highlighted points
+        ),
         tension: 0.4,
-      },
+      },   
+      {
+        label: 'Sell',
+        data: stockData.map(item => item.close_price),
+        borderColor: stockData.map((item) => {
+          if (entryDates.includes(item.date)) {
+            return 'rgba(255, 99, 132, 1)'; // Red for entry dates
+          } else if (exitDates.includes(item.date)) {
+            return 'rgba(54, 162, 235, 1)'; // Blue for exit dates
+          } else {
+            return 'rgba(75, 192, 192, 1)'; // Default teal color
+          }
+        }),
+        backgroundColor: stockData.map((item) => {
+          if (entryDates.includes(item.date)) {
+            return 'rgba(255, 99, 132, 0.2)'; // Light red for entry dates
+          } else if (exitDates.includes(item.date)) {
+            return 'rgba(54, 162, 235, 0.2)'; // Light blue for exit dates
+          } else {
+            return 'rgba(75, 192, 192, 0.2)'; // Default light teal color
+          }
+        }),
+        pointBorderWidth: stockData.map((item) =>
+          entryDates.includes(item.date) || exitDates.includes(item.date) ? 3 : 1 // Thicker border for highlighted points
+        ),
+        tension: 0.4,
+      }, 
     ],
   };
 
@@ -62,6 +121,17 @@ function BackTesting() {
     plugins: {
       legend: {
         position: 'top',
+        labels: {
+          font: {
+            size: 10,           // Increase font size
+            weight: 'normal',   // Set font weight to normal
+          },
+          color: 'rgba(0, 0, 0, 0.6)',  // Change font color of legend labels
+          padding: 20,                // Add padding around each legend item
+          boxWidth: 20,               // Set the width of the colored box next to the legend label
+          boxHeight: 20,              // Set the height of the colored box next to the legend label
+          usePointStyle: true,        // Use a circle as the point style in the legend
+        },
       },
       title: {
         display: true,
@@ -103,7 +173,7 @@ function BackTesting() {
         {loading ? 'Loading...' : 'Fetch Data'}
       </button>
       {error && <div className="error">{error}</div>}
-      {data.length > 0 && <Line data={chartData} options={options} />}
+      {stockData.length > 0 && <Line data={chartData} options={options} />}
     </div>
   );
 }

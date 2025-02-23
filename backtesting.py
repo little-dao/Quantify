@@ -49,6 +49,18 @@ class Trade:
         if self.action == 'sell':
             self.pnl = -self.pnl
 
+    def to_dict(self):
+        return {
+            'symbol': self.symbol,
+            'quantity': self.quantity,
+            'action': self.action,
+            'entry_price': self.entry_price,
+            'exit_price': self.exit_price,
+            'entry_date': self.entry_date,
+            'exit_date': self.exit_date,
+            'pnl': self.pnl
+        }
+
 @dataclass
 class BacktestConfig:
     initial_capital: float = 100000.0
@@ -195,7 +207,7 @@ class Backtest:
             # Update equity and performance metrics
             self.update_equity(row['close_price'])
         
-        return self.positions
+        return self.trades
             
     def get_performance_metrics(self) -> Dict:
         """Calculate and return performance metrics."""
@@ -267,27 +279,27 @@ class Backtest:
 #     'close_price': [150, 152, 149, 153, 155, 157, 154, 156, 158, 160]
 # })
 
-db_config = {
-    "host": "localhost",
-    "user": "root",
-    "password": "root",
-    "database": "hack_canada"
-}
-engine = create_engine(f"mysql+pymysql://{db_config['user']}:{db_config['password']}@{db_config['host']}/{db_config['database']}")
+# db_config = {
+#     "host": "localhost",
+#     "user": "root",
+#     "password": "password",
+#     "database": "hack_canada"
+# }
+# engine = create_engine(f"mysql+pymysql://{db_config['user']}:{db_config['password']}@{db_config['host']}/{db_config['database']}")
 
 
-query = "SELECT * FROM data WHERE ticker = 'AMZN'"
+# query = "SELECT * FROM stock_prices WHERE ticker = 'AMZN'"
 
-data = pd.read_sql(query, engine)
+# data = pd.read_sql(query, engine)
 
-strategy = BollingerStrategy(window = 16, num_std=1)
-backtest = Backtest(data, strategy)
-backtest.run()
+# strategy = BollingerStrategy(window = 16, num_std=1)
+# backtest = Backtest(data, strategy)
+# backtest.run()
 
-print("\n==== ALL TRADES ====")
-for trade in backtest.trades:
-    print(f"Symbol: {trade.symbol}, Entry: {trade.entry_price} on {trade.entry_date}, "
-            f"Exit: {trade.exit_price} on {trade.exit_date}, PnL: {trade.exit_price - trade.entry_price}")
+# print("\n==== ALL TRADES ====")
+# for trade in backtest.trades:
+#     print(f"Symbol: {trade.symbol}, Entry: {trade.entry_price} on {trade.entry_date}, "
+#             f"Exit: {trade.exit_price} on {trade.exit_date}, PnL: {trade.exit_price - trade.entry_price}")
 
 
-backtest.plot_equity_curve()
+# backtest.plot_equity_curve()
