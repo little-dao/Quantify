@@ -1,38 +1,73 @@
-.App {
-  text-align: center;
+/* Main content styling */
+.main-content {
+  padding: 2rem; /* Padding for top/bottom and left/right */
+  text-align: center; /* Center align text */
+  color: #ffffff; /* White text color */
+  background-color: #121212; /* Dark mode background */
+  min-height: calc(100vh - 60px); /* Full height minus header height */
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.home-content h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.home-content p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  max-width: 600px; /* Limit text width */
+  margin-left: auto; /* Center horizontally */
+  margin-right: auto; /* Center horizontally */
+  line-height: 1.6; /* Improved readability */
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+/* Main Sign Up button styling */
+.main-signup-button {
+  padding: 0.75rem 1.5rem;
+  background-color: #00ff99; /* Bright green background */
+  color: #000; /* Black text color */
+  text-decoration: none; /* Remove underline */
+  font-weight: bold;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Smooth hover effect */
 }
 
-.App-link {
-  color: #61dafb;
+.main-signup-button:hover {
+  background-color: #00cc88; /* Change background color on hover */
 }
 
-@keyframes App-logo-spin {
+.main-signup-button a {
+  color: inherit; /* Inherit text color from parent */
+  text-decoration: none; /* Remove underline */
+}
+
+/* Graph container styling */
+.graph-container {
+  margin-top: 2rem; /* Space above the graph */
+  text-align: center; /* Center align the graph */
+}
+
+.graph-svg {
+  width: 100%; /* Full width */
+  max-width: 600px; /* Limit maximum width */
+  height: auto; /* Maintain aspect ratio */
+  margin: 0 auto; /* Center align horizontally */
+}
+
+/* Animation for the graph line */
+.graph-svg polyline {
+  animation: drawGraph 2s ease-in-out forwards;
+}
+
+/* Keyframes for drawing the graph */
+@keyframes drawGraph {
   from {
-    transform: rotate(0deg);
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
   }
   to {
-    transform: rotate(360deg);
+    stroke-dashoffset: 0;
   }
 }

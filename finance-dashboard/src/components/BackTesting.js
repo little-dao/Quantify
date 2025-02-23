@@ -70,7 +70,7 @@ function BackTesting() {
           if (entryDates.includes(item.date)) {
             return 'rgba(255, 99, 132, 1)'; // Red for entry dates
           } else if (exitDates.includes(item.date)) {
-            return 'rgba(54, 162, 235, 1)'; // Blue for exit dates
+            return 'rgba(0, 255, 0, 1)'; // Blue for exit dates
           } else {
             return 'rgba(75, 192, 192, 1)'; // Default teal color
           }
@@ -118,51 +118,71 @@ function BackTesting() {
     ],
   };
 
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'top',
-        labels: {
-          font: {
-            size: 10,           // Increase font size
-            weight: 'normal',   // Set font weight to normal
-          },
-          color: 'rgba(0, 0, 0, 0.6)',  // Change font color of legend labels
-          padding: 20,                // Add padding around each legend item
-          boxWidth: 20,               // Set the width of the colored box next to the legend label
-          boxHeight: 20,              // Set the height of the colored box next to the legend label
-          usePointStyle: true,        // Use a circle as the point style in the legend
+const options = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'top',
+      labels: {
+        font: {
+          size: 10,
+          weight: 'normal',
         },
+        color: 'rgba(255, 255, 255, 1)',  // Change font color of legend labels to black
+        padding: 20,
+        boxWidth: 20,
+        boxHeight: 20,
+        usePointStyle: true,
       },
+    },
+    title: {
+      display: true,
+      text: `Stock Prices for ${ticker || 'All Tickers'}`,
+      color: 'rgba(255, 255, 255, 1)',  // Change title color to black
+      font: {
+        size: 16,
+        weight: 'bold',
+      },
+    },
+  },
+  layout: {
+    padding: {
+      left: 10,
+      right: 10,
+      top: 10,
+      bottom: 10,
+    },
+  },
+  scales: {
+    x: {
       title: {
         display: true,
-        text: `Stock Prices for ${ticker || 'All Tickers'}`,
-        color:
-          entryDates.length > exitDates.length
-            ? 'rgba(255, 99, 132, 1)' // Red if more Buy points
-            : 'rgba(54, 162, 235, 1)', // Blue if more Sell points
-        font: {
-          size: 16,
-          weight: 'bold',
-        },
+        text: 'Date',
+        color: 'rgba(255, 255, 255, 1)',  // Change x-axis title color to black
+      },
+      ticks: {
+        color: 'rgba(255, 255, 255, 1)',  // Change x-axis ticks color to black
+      },
+      grid: {
+        color: 'rgba(255, 255, 255, 1)',  // Light grid lines for x-axis
       },
     },
-    scales: {
-      x: {
-        title: {
-          display: true,
-          text: 'Date',
-        },
+    y: {
+      title: {
+        display: true,
+        text: 'Price (USD)',
+        color: 'rgba(255, 255, 255, 1)',  // Change y-axis title color to black
       },
-      y: {
-        title: {
-          display: true,
-          text: 'Price (USD)',
-        },
+      ticks: {
+        color: 'rgba(255, 255, 255, 1)',  // Change y-axis ticks color to black
+      },
+      grid: {
+        color: 'rgba(255, 255, 255, 1)',  // Light grid lines for y-axis
       },
     },
-  };
+  },
+  backgroundColor: 'rgba(255, 255, 255, 1)',  // Set the background color of the chart to white
+};
 
   const columns = React.useMemo(
     () => [

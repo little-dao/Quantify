@@ -3,14 +3,15 @@
   padding: 20px;
   max-width: 800px;
   margin: 0 auto;
-  background-color: #f9f9f9;
+  background-color: #1e1e1e; /* Dark background color */
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  color: #ffffff; /* Light text color */
 }
 
 h3 {
   margin-bottom: 10px;
-  color: #333;
+  color: #ffffff; /* Light text color */
 }
 
 .droppable-container {
@@ -22,17 +23,20 @@ h3 {
 .droppable {
   min-height: 50px;
   width: 150px;
-  background-color: #e0e0e0;
+  background-color: #333333; /* Darker background for droppable areas */
   padding: 10px;
   border-radius: 4px;
   text-align: center;
+  color: #ffffff; /* Light text color */
 }
 
 .select {
   margin-left: 10px;
   padding: 5px;
   border-radius: 4px;
-  border: 1px solid #ccc;
+  border: 1px solid #555555; /* Darker border */
+  background-color: #333333; /* Darker background */
+  color: #ffffff; /* Light text color */
 }
 
 .draggable {
@@ -40,7 +44,7 @@ h3 {
   padding: 16px;
   margin-right: 8px;
   background-color: #456C86;
-  color: #fff;
+  color: #ffffff; /* Light text color */
   border-radius: 4px;
   text-align: center;
 }
@@ -50,7 +54,7 @@ h3 {
   padding: 16px;
   margin-bottom: 8px;
   background-color: #263B4A;
-  color: #fff;
+  color: #ffffff; /* Light text color */
   display: flex;
   align-items: center;
   border-radius: 4px;
@@ -61,13 +65,15 @@ h3 {
   margin-left: 10px;
   padding: 5px;
   border-radius: 4px;
-  border: 1px solid #ccc;
+  border: 1px solid #555555; /* Darker border */
+  background-color: #333333; /* Darker background */
+  color: #ffffff; /* Light text color */
 }
 
 button {
   padding: 10px 20px;
   background-color: #007BFF;
-  color: #fff;
+  color: #ffffff; /* Light text color */
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -81,6 +87,7 @@ button:hover {
 .generated-expression {
   margin-top: 20px;
   padding: 10px;
-  background-color: #e0e0e0;
+  background-color: #333333; /* Darker background */
   border-radius: 4px;
+  color: #ffffff; /* Light text color */
 }

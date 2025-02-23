@@ -19,7 +19,7 @@ def get_db_connection():
     return pymysql.connect(
         host="localhost",
         user="root",  # Your MySQL username
-        password="password",  # Your MySQL password
+        password="root",  # Your MySQL password
         database="hack_canada",  # Your database name
         charset="utf8mb4",
         cursorclass=pymysql.cursors.DictCursor  # Return results as dictionaries
@@ -70,7 +70,7 @@ def get_financial_data():
 db_config = {
     "host": "localhost",
     "user": "root",
-    "password": "password",
+    "password": "root",
     "database": "hack_canada"
 }
 

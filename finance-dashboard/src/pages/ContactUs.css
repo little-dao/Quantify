@@ -1,0 +1,70 @@
+/* Contact Us page styling */
+.contact-us-container {
+	padding: 2rem;
+	text-align: center;
+	color: #ffffff;
+	background-color: #121212;
+	min-height: calc(100vh - 60px); /* Full height minus header */
+  }
+  
+  .contact-us-container h1 {
+	font-size: 2.5rem;
+	margin-bottom: 1rem;
+  }
+  
+  .contact-us-container p {
+	font-size: 1.2rem;
+	margin-bottom: 2rem;
+	max-width: 600px;
+	margin-left: auto;
+	margin-right: auto;
+	line-height: 1.6;
+  }
+  
+  /* Contact info and map container */
+  .contact-info-container {
+	display: flex;
+	flex-direction: column; /* Stack vertically on small screens */
+	align-items: center; /* Center align items */
+	gap: 2rem; /* Space between contact details and map */
+	max-width: 1000px; /* Limit maximum width */
+	margin: 0 auto; /* Center horizontally */
+  }
+  
+  /* Contact details styling */
+  .contact-details {
+	background-color: #1e1e1e;
+	padding: 1.5rem;
+	border-radius: 8px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+	text-align: left;
+	max-width: 500px;
+	width: 100%;
+  }
+  
+  .contact-details p {
+	font-size: 1rem;
+	margin: 0.5rem 0;
+  }
+  
+  /* Map container styling */
+  .map-container {
+	width: 100%;
+	max-width: 500px;
+	border-radius: 8px;
+	overflow: hidden;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  }
+  
+  @media (min-width: 768px) {
+	/* Arrange contact details and map side by side on larger screens */
+	.contact-info-container {
+	  flex-direction: row; /* Horizontal layout */
+	  justify-content: space-between; /* Space between items */
+	}
+  
+	.contact-details,
+	.map-container {
+	  max-width: 48%; /* Each takes up half the width */
+	}
+  }

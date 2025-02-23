@@ -1,0 +1,86 @@
+/* Entire header styling */
+.header {
+	display: flex;
+	justify-content: space-between; /* Space between logo and navigation */
+	align-items: center;
+	padding: 1rem 2rem; /* Padding for top/bottom and left/right */
+	background-color: #1e1e1e; /* Dark mode background */
+	border-bottom: 1px solid #333; /* Bottom border */
+  }
+  
+  /* Logo container styling */
+  .logo-container {
+	display: flex;
+	align-items: center; /* Align logo vertically */
+  }
+  
+  .logo-link {
+	display: flex;
+	align-items: center;
+	text-decoration: none; /* Remove underline */
+  }
+  
+  .logo {
+	width: 60px;
+	height: 60px;
+	cursor: pointer; /* Pointer cursor on hover */
+  }
+  
+  /* Navigation container styling */
+  .nav-container {
+	display: flex;
+	align-items: center; /* Align items vertically */
+	gap: 2rem; /* Space between navigation links and Sign Up/Logout button */
+  }
+  
+  /* Navigation links styling */
+  .nav-links {
+	display: flex;
+	gap: 1.5rem; /* Space between navigation items */
+  }
+  
+  .nav-item {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem; /* Space between icon and text */
+	color: #ffffff; /* White text color */
+	text-decoration: none; /* Remove underline */
+	font-size: 1rem;
+	font-weight: bold;
+	transition: color 0.3s ease; /* Smooth hover effect */
+  }
+  
+  .nav-item:hover {
+	color: #00ff99; /* Change color on hover */
+  }
+  
+  /* Sign Up button styling */
+  .signup-button {
+	padding: 0.5rem 1rem;
+	background-color: #00ff99; /* Bright green background */
+	color: #000; /* Black text color */
+	text-decoration: none; /* Remove underline */
+	font-weight: bold;
+	border-radius: 4px;
+	transition: background-color 0.3s ease; /* Smooth hover effect */
+  }
+  
+  .signup-button:hover {
+	background-color: #00cc88; /* Change background color on hover */
+  }
+  
+  /* Logout button styling */
+  .logout-button {
+	padding: 0.5rem 1rem;
+	background-color: #ff4d4d; /* Red background for logout */
+	color: #ffffff; /* White text color */
+	font-weight: bold;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	transition: background-color 0.3s ease; /* Smooth hover effect */
+  }
+  
+  .logout-button:hover {
+	background-color: #e60000; /* Darker red on hover */
+  }

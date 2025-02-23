@@ -1,36 +1,66 @@
 /* BackTesting.css */
+body {
+  background-color: #1e1e1e; /* Dark background color */
+  color: #ffffff; /* Light text color */
+}
+
+h2 {
+  color: #ffffff; /* Light text color */
+}
+
+label {
+  color: #ffffff; /* Light text color */
+}
+
+input[type="text"],
+input[type="date"] {
+  background-color: #333333; /* Darker background */
+  color: #ffffff; /* Light text color */
+  border: 1px solid #555555; /* Darker border */
+  border-radius: 4px;
+  padding: 5px;
+  margin: 5px 0;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #007BFF;
+  color: #ffffff; /* Light text color */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 10px 0;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.error {
+  color: #ff4d4d; /* Red color for error messages */
+}
+
 .table-container {
   margin-top: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-}
-
-thead {
-  background-color: #f4f4f4;
+  background-color: #333333; /* Darker background */
+  color: #ffffff; /* Light text color */
 }
 
 th, td {
-  padding: 12px 15px;
+  border: 1px solid #555555; /* Darker border */
+  padding: 10px;
   text-align: left;
-  border-bottom: 1px solid #ddd;
 }
 
 th {
-  background-color: #f4f4f4;
-  font-weight: bold;
+  background-color: #444444; /* Slightly lighter background for headers */
 }
 
-tr:hover {
-  background-color: #f1f1f1;
-}
-
-tr:nth-child(even) {
-  background-color: #f9f9f9;
+td {
+  background-color: #333333; /* Darker background for table cells */
 }

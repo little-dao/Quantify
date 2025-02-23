@@ -1,0 +1,79 @@
+/* Full-screen background */
+.signup-container {
+	display: flex;
+	justify-content: center; /* Center horizontally */
+	align-items: center; /* Center vertically */
+	height: 100vh; /* Full viewport height */
+	background-color: #121212; /* Dark background color */
+  }
+  
+  /* Styled box for the sign-up form */
+  .signup-box {
+	background-color: #1e1e1e; /* Slightly lighter than the background */
+	padding: 2rem; /* Inner spacing */
+	border-radius: 8px; /* Rounded corners */
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+	width: 300px; /* Fixed width for the box */
+	text-align: center; /* Center-align text inside the box */
+  }
+  
+  /* Title styling */
+  .signup-box h2 {
+	margin-bottom: 1rem; /* Space below the title */
+	color: #ffffff; /* White text color */
+  }
+  
+  /* Form layout */
+  .signup-form {
+	display: flex;
+	flex-direction: column; /* Stack inputs vertically */
+	gap: 1rem; /* Space between form elements */
+  }
+  
+  /* Input field styling */
+  .signup-form input {
+	padding: 0.5rem; /* Padding inside input fields */
+	border: 1px solid #333; /* Border style */
+	border-radius: 4px; /* Rounded corners */
+	background-color: #222; /* Dark input background */
+	color: #ffffff; /* White text color */
+  }
+  
+  /* Submit button styling */
+  .signup-form button {
+	padding: 0.5rem; /* Padding inside the button */
+	background-color: #00ff99; /* Bright green button color */
+	color: #000; /* Black text color */
+	border: none; /* No border */
+	border-radius: 4px; /* Rounded corners */
+	cursor: pointer; /* Pointer cursor on hover */
+  }
+  
+  /* Hover effect for the button */
+  .signup-form button:hover {
+	background-color: #00cc88; /* Slightly darker green on hover */
+  }
+  
+  /* Error message styling */
+  .error-message {
+	color: red; /* Red text for errors */
+	font-size: 0.9rem; /* Smaller font size */
+	margin-bottom: 1rem; /* Space below the error message */
+  }
+  
+  /* Paragraph styling for the login link */
+  .signup-box p {
+	margin-top: 1rem; /* Space above the paragraph */
+	color: #ffffff; /* White text color */
+  }
+  
+  /* Login link styling */
+  .signup-box a {
+	color: #00ff99; /* Bright green link color */
+	text-decoration: none; /* Remove underline */
+  }
+  
+  /* Hover effect for the login link */
+  .signup-box a:hover {
+	text-decoration: underline; /* Underline on hover */
+  }

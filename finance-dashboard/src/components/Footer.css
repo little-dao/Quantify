@@ -1,0 +1,46 @@
+/* Footer styling */
+.footer {
+	background-color: #1e1e1e; /* Dark mode background */
+	color: #ffffff; /* White text color */
+	padding: 2rem; /* Padding for top/bottom and left/right */
+	font-size: 0.9rem; /* Smaller font size */
+	line-height: 1.6; /* Improved readability */
+  }
+  
+  .footer-content {
+	max-width: 1200px; /* Limit width for better readability */
+	margin: 0 auto; /* Center align content */
+	text-align: left; /* Align text to the left */
+  }
+  
+  /* Footer links styling */
+  .footer-links {
+	display: flex;
+	flex-wrap: wrap; /* Wrap links to next line on small screens */
+	gap: 1.5rem; /* Space between links */
+	margin-bottom: 1rem; /* Space below links */
+  }
+  
+  .footer-links a {
+	color: #00ff99; /* Bright green color for links */
+	text-decoration: none; /* Remove underline */
+	transition: color 0.3s ease; /* Smooth hover effect */
+  }
+  
+  .footer-links a:hover {
+	color: #00cc88; /* Change color on hover */
+  }
+  
+  /* Disclaimer text styling */
+  .footer p {
+	color: #cccccc; /* Light gray color for disclaimers */
+	margin-bottom: 1rem; /* Space between paragraphs */
+  }
+  
+  /* Copyright notice styling */
+  .copyright {
+	font-size: 0.8rem; /* Smaller font size for copyright */
+	color: #888888; /* Darker gray color for copyright */
+	text-align: center; /* Center align copyright text */
+	margin-top: 1rem; /* Space above copyright */
+  }
