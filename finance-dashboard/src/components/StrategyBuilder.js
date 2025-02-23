@@ -105,48 +105,25 @@ function StrategyBuilder() {
   };
 
   const handleSubmit = () => {
-    const enterLongExpr = new Expression(
-      enterLongCondition,
-      enterLongOperands.left,
-      enterLongOperands.right,
-      enterLongOperands.left,
-      enterLongOperands.right
-    );
+    const enterLongExpr = `Enter Long when ${enterLongOperands.left} ${enterLongCondition} ${enterLongOperands.right}`;
+    const exitLongExpr = `Exit Long when ${exitLongOperands.left} ${exitLongCondition} ${exitLongOperands.right}`;
 
-    const exitLongExpr = new Expression(
-      exitLongCondition,
-      exitLongOperands.left,
-      exitLongOperands.right,
-      exitLongOperands.left,
-      exitLongOperands.right
-    );
-
-    const strategyExpr = blocks.map((block, index) => {
-      const days = block.days ? `(${block.days})` : '';
-      const operation = block.operation ? block.operation : '';
-      const operator = index < blocks.length - 1 ? block.operator || '+' : ''; // Use the selected operator
-      return new Expression(
-        operator,
-        block.label,
-        block.operation,
-        block.label,
-        block.days
-      );
-    });
-
-    const fullExpression = {
-      enterLong: enterLongExpr,
-      exitLong: exitLongExpr,
-      strategy: strategyExpr,
-      expression: expression
-    };
-
-    fetch('http://localhost:8000/api/submit-expression', {
+    fetch('http://localhost:8000/api/submit-strategy', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(fullExpression),
+      body: JSON.stringify({ 
+        enter_long: {
+          left_operand: enterLongOperands.left,
+          condition: enterLongCondition,
+          right_operand: enterLongOperands.right,
+        },
+        exit_long: {
+          left_operand: exitLongOperands.left,
+          condition: exitLongCondition,
+          right_operand: exitLongOperands.right,
+        }}),
     })
       .then(response => response.json())
       .then(data => {

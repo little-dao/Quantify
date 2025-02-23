@@ -248,15 +248,15 @@ class UserDefinedStrategy(Strategy):
     """
     Strategy defined by users
     """
-    def __init__(self, user_defined_variable: UserDefinedVariable, condition: Condition, expression: UserDefinedExpression, action: Action):
-        self.user_defined_variable = user_defined_variable
+    def __init__(self, left_operand: UserDefinedExpression, condition: Condition, right_operand: UserDefinedExpression, action: Action):
+        self.left_operand = left_operand
         self.condition = condition
-        self.expression = expression
+        self.right_operand = right_operand
         self.action = action
 
     def update(self, data):
-        self.operand = self.user_defined_variable.evaluate(data)[0]
-        self.expression_value = self.expression.evaluate(data)[0]
+        self.operand = self.left_operand.evaluate(data)[0]
+        self.expression_value = self.right_operand.evaluate(data)[0]
 
     def next(self):
         if self.condition == Condition.GREATER:
@@ -290,6 +290,31 @@ class UserDefinedStrategy(Strategy):
                 self.signal = 0
         
         return self.signal
+
+class CombinedBollingerStrategy(Strategy):
+    def __init__(self, sell_strategy, buy_strategy):
+        super().__init__()
+        self.sell_strategy = sell_strategy
+        self.buy_strategy = buy_strategy
+        self.hold = False
+
+    def update(self, data):
+        self.sell_strategy.update(data)
+        self.buy_strategy.update(data)
+
+    def next(self):
+        sell_signal = self.sell_strategy.next()
+        buy_signal = self.buy_strategy.next()
+        
+        # Prioritize sell over buy (as per original strategy)
+        if sell_signal == -1 and self.hold:
+            self.hold = False
+            return -1
+        elif buy_signal == 1 and not self.hold:
+            self.hold = True
+            return 1
+        else:
+            return 0
 
     
     
