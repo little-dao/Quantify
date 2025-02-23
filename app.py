@@ -107,6 +107,7 @@ def get_trades():
 @app.route('/api/submit-expression', methods=['POST'])
 def submit_expression():
     data = request.get_json()
+    print(data)
     expression = data.get('expression')
 
     # Process the expression as needed

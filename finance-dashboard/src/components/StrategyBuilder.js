@@ -24,6 +24,17 @@ function StrategyBuilder() {
   const operators = ['+', '-', '*', '/'];
   const conditions = ['>', '<', '>=', '<=', '='];
 
+  // Define the Expression class
+  class Expression {
+    constructor(arithmOperator, indicator, condition, leftOperand, rightOperand) {
+      this.arithmOperator = arithmOperator;
+      this.indicator = indicator;
+      this.condition = condition;
+      this.leftOperand = leftOperand;
+      this.rightOperand = rightOperand;
+    }
+  }
+
   const onDragEnd = (result) => {
     if (!result.destination) return;
 
@@ -82,6 +93,7 @@ function StrategyBuilder() {
     }).join('');
 
     const fullExpression = `${enterLongExpr}\n${exitLongExpr}\nStrategy Expression: ${strategyExpr}`;
+    setExpression(fullExpression);
 
     // Create an expression block for reuse
     const newExpressionBlock = {
@@ -93,16 +105,48 @@ function StrategyBuilder() {
   };
 
   const handleSubmit = () => {
-    const enterLongExpr = `Enter Long when ${enterLongOperands.left} ${enterLongCondition} ${enterLongOperands.right}`;
-    const exitLongExpr = `Exit Long when ${exitLongOperands.left} ${exitLongCondition} ${exitLongOperands.right}`;
-    const fullExpression = `${enterLongExpr}\n${exitLongExpr}`;
+    const enterLongExpr = new Expression(
+      enterLongCondition,
+      enterLongOperands.left,
+      enterLongOperands.right,
+      enterLongOperands.left,
+      enterLongOperands.right
+    );
+
+    const exitLongExpr = new Expression(
+      exitLongCondition,
+      exitLongOperands.left,
+      exitLongOperands.right,
+      exitLongOperands.left,
+      exitLongOperands.right
+    );
+
+    const strategyExpr = blocks.map((block, index) => {
+      const days = block.days ? `(${block.days})` : '';
+      const operation = block.operation ? block.operation : '';
+      const operator = index < blocks.length - 1 ? block.operator || '+' : ''; // Use the selected operator
+      return new Expression(
+        operator,
+        block.label,
+        block.operation,
+        block.label,
+        block.days
+      );
+    });
+
+    const fullExpression = {
+      enterLong: enterLongExpr,
+      exitLong: exitLongExpr,
+      strategy: strategyExpr,
+      expression: expression
+    };
 
     fetch('http://localhost:8000/api/submit-expression', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ expression: fullExpression }),
+      body: JSON.stringify(fullExpression),
     })
       .then(response => response.json())
       .then(data => {
