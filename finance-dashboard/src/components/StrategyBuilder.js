@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
 function StrategyBuilder() {
@@ -9,6 +10,7 @@ function StrategyBuilder() {
   const [exitLongCondition, setExitLongCondition] = useState('<');
   const [expression, setExpression] = useState('');
   const [expressionBlock, setExpressionBlock] = useState(null);
+  const navigate = useNavigate();
 
   const availableBlocks = [
     { id: '1', label: 'Moving Average' },
@@ -72,14 +74,13 @@ function StrategyBuilder() {
     const enterLongExpr = `Enter Long when ${enterLongOperands.left} ${enterLongCondition} ${enterLongOperands.right}`;
     const exitLongExpr = `Exit Long when ${exitLongOperands.left} ${exitLongCondition} ${exitLongOperands.right}`;
     const strategyExpr = blocks.map((block, index) => {
-  const days = block.days ? `(${block.days})` : '';
-  const operation = block.operation ? block.operation : '';
-  const operator = index < blocks.length - 1 ? block.operator || '+' : ''; // Use the selected operator
-  return `${block.label}${days}${operation} ${operator}`;
-}).join('');
+      const days = block.days ? `(${block.days})` : '';
+      const operation = block.operation ? block.operation : '';
+      const operator = index < blocks.length - 1 ? block.operator || '+' : ''; // Use the selected operator
+      return `${block.label}${days}${operation} ${operator}`;
+    }).join('');
 
-
-  const fullExpression = `${enterLongExpr}\n${exitLongExpr}\nStrategy Expression: ${strategyExpr}`;
+    const fullExpression = `${enterLongExpr}\n${exitLongExpr}\nStrategy Expression: ${strategyExpr}`;
 
     // Create an expression block for reuse
     const newExpressionBlock = {
@@ -105,6 +106,7 @@ function StrategyBuilder() {
       .then(response => response.json())
       .then(data => {
         console.log('Success:', data);
+        navigate('/backtesting'); // Redirect to BackTesting page
       })
       .catch(error => {
         console.error('Error:', error);

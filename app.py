@@ -74,7 +74,7 @@ db_config = {
 # API endpoint to fetch trades
 @app.route('/api/trades', methods=['GET'])
 def get_trades():
-    ticker = request.args.get('ticker', default=None)  # Get ticker from query params
+    ticker = request.args.get('ticker', default="AAPL")  # Get ticker from query params
     start_date = request.args.get('start_date', default=None)  # Get start_date from query params
     end_date = request.args.get('end_date', default=None)  # Get end_date from query params
     num_std = request.args.get('num_std', default=2)
